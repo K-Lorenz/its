@@ -10,14 +10,14 @@ export type StepProps = {
 
 export default function Step({ title, text, buttons, disabled=false }: StepProps) {
   return (
-    <div className="mb-6 bg-gray-100 p-10 rounded-md text-white">
+    <div className="mb-6 bg-gray-100 md:p-10 p-7 rounded-md text-white scroll-m-3">
       <h2 className="text-2xl text-gray-700 mb-2">{title}</h2>
-      <p className="text-gray-600 mb-7 ml-2 text-lg leading-loose">
+      <p className="text-gray-600 mb-7 ml-2 md:text-lg leading-loose ">
         <b>Dein Text: </b>
         {text}
       </p>
       <h2 className="text-xl text-gray-700 mb-4">Antwort</h2>
-      <div className="flex items-center space-x-5">
+      <div className="flex md:justify-start justify-between space-x-5">
         {buttons.map((button) => (
           <button
             key={button.buttonText}

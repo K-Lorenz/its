@@ -1,7 +1,7 @@
  'use client'
 
 import Step from "./components/step"
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { StepProps } from "./components/step"
 import InputMask from "./components/inputMask"
 
@@ -24,7 +24,7 @@ export default function Home(){
     },
     notContact:{
       title: "Weiterleiten",
-      text: `Schade, ist denn ${info.contactName} anwesend und können sie mich weiterleiten?`,
+      text: `Schade, ist denn ${info.contactName} anwesend und können Sie mich weiterleiten?`,
       buttons:[
         { buttonText: "Ja", buttonType: "Accept", onClick: () => addStep(stepList.correctContact)},
         { buttonText: "Nein", buttonType: "Cancel", onClick: () => addStep(stepList.newContact)}
@@ -34,7 +34,7 @@ export default function Home(){
     },
     newContact:{
       title: "Neue Ansprechperson",
-      text: "Alles klar wären sie denn bereit kurz mit mir zu sprechen?",
+      text: "Alles klar wären Sie denn bereit kurz mit mir zu sprechen?",
       buttons:[
         { buttonText: "Ja", buttonType: "Accept", onClick: () => addStep(stepList.correctNewContact)},
         { buttonText: "Nein", buttonType: "Cancel", onClick: () => addStep(stepList.callBackGoodbye)}
@@ -45,7 +45,7 @@ export default function Home(){
     correctContact:{
       disabled: false,
       title:"Studentec Vorstellung",
-      text:`Super! Wir haben uns  ${info.contactTime} unterhalten. Ich würde aber vorschlagen, dass ich Ihnen Studentec noch einmal kurz vorstelle. \n ${studentecDescription} Haben sie eventuell Interesse an einem persönlichen Gespräch?`,
+      text:`Super! Wir haben uns  ${info.contactTime} unterhalten. Ich würde aber vorschlagen, dass ich Ihnen Studentec noch einmal kurz vorstelle. \n ${studentecDescription} Haben Sie eventuell Interesse an einem persönlichen Gespräch?`,
       buttons:[
         { buttonText: "Ja", buttonType: "Accept", onClick: () => addStep(stepList.emailGoodbye)},
         { buttonText: "Nein", buttonType: "Cancel", onClick: () => addStep(stepList.callBackGoodbye)}
@@ -55,7 +55,7 @@ export default function Home(){
     correctNewContact:{
       disabled:false,
       title: "Studentec Vorstellung",
-      text: `Super! Ich würde vorschlagen, dass ich kurz Studentec vorstelle. \n ${studentecDescription} Haben sie eventuell Interesse an einem persönlichen Gespräch?`,
+      text: `Super! Ich würde vorschlagen, dass ich kurz Studentec vorstelle. \n ${studentecDescription} Haben Sie eventuell Interesse an einem persönlichen Gespräch?`,
       buttons:[
         { buttonText: "Ja", buttonType: "Accept", onClick: () => addStep(stepList.emailGoodbye)},
         { buttonText: "Nein", buttonType: "Cancel", onClick: () => addStep(stepList.emailGoodbye)},
@@ -72,7 +72,7 @@ export default function Home(){
     callBackGoodbye:{
       disabled: false,
       title: "Rückruf",
-      text: "Schade, Sind sie damit einverstanden, wenn ich Sie in 3-6 Monaten nochmal anrufe?",
+      text: "Schade, Sind Sie damit einverstanden, wenn ich Sie in 3-6 Monaten nochmal anrufe?",
       buttons: [
         { buttonText: "Ja", buttonType: "Accept", onClick: () => addStep(stepList.goodbye)},
         { buttonText: "Nein", buttonType: "Cancel", onClick: () => addStep(stepList.deleteInfo)}
@@ -96,12 +96,20 @@ export default function Home(){
       key: 0
     }
   }
+const stepContainerRef = useRef<HTMLDivElement>(null);
+
+useEffect(() => {
+  if (steps.length > 0 && stepContainerRef.current) {
+    const lastStepElement = stepContainerRef.current.lastElementChild;
+    if (lastStepElement) {
+      lastStepElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+}, [steps]);
 
   function addStep(step: StepProps, disablePrevStep = true) {
     key.current += 1;
       setSteps((prevSteps) => {
-        // Log the new step with its updated key
-        console.log({ ...step, key: key.current });
         return [...prevSteps, { ...step, key: key.current }];
       });
   
@@ -129,12 +137,14 @@ export default function Home(){
   return(
     <div className="bg-gray-200 min-h-screen w-full flex flex-col items-center space-y-5">
       <h1 className="text-3xl font-semibold text-black mt-12 mb-12"> Interaktives TelefonSkript!</h1>   
-      { steps.length<1 &&<InputMask setInfo={setInfo} info={info} onSave={onSave}/>}
-      <div>
+      { steps.length<1 ?<InputMask setInfo={setInfo} info={info} onSave={onSave}/> :
+      <div ref={stepContainerRef} className="bg-gray-400 md:p-8 p-4 rounded-md w-11/12">
         {steps.map((step, index) => (
           <Step key={index} title={step.title} text={step.text} buttons={step.buttons} disabled={step.disabled}/>
         ))}
       </div>
+      }
+      
     </div>
   )
 }
