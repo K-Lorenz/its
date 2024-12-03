@@ -1,7 +1,17 @@
 'use client'
-import { useState } from 'react';
+interface Info {
+  me: string;
+  contactName: string;
+  contactTime: string;
+}
 
-export default function InputMask({info, setInfo, onSave}) {
+interface InputMaskProps {
+  info: Info;
+  setInfo: React.Dispatch<React.SetStateAction<Info>>;
+  onSave: () => void;
+}
+
+export default function InputMask({info, setInfo, onSave}: InputMaskProps) {
 
   // Handle input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {

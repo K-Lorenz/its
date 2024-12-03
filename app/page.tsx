@@ -4,15 +4,14 @@ import Step from "./components/step"
 import { useState, useRef } from "react"
 import { StepProps } from "./components/step"
 import InputMask from "./components/inputMask"
-import { checkServerIdentity } from "tls"
 
 export default function Home(){
   const [info, setInfo]= useState({me:"", contactName:"", contactTime:""})
   const key = useRef(0)
   const [steps, setSteps] = useState<StepProps[]>([])
-  let studentecDescription = "Wir sind ein junges, motiviertes Team von Studenten des Karlsruher Instituts für Technologie. Seit 2009 führen wir erfolgreich Projekte in verschiedenen Branchen durch. Wir zeichnen uns durch unsere Flexibilität und Innovationsgeist aus und dadurch, dass wir verschiedene Studiengänge besuchen, bringen wir frisches Wissen aus den Bereichen Informatik, Maschinenbau, Elektrotechnik und mehr in jedes Projekt. Mit über 10 Jahren Erfahrung in der Softwareentwicklung, Digitalisierung, Entwicklungsideen, Prozessoptimierung und Konstruktion sind wir der ideale Partner für Ihre Herausforderungen."
+  const studentecDescription = "Wir sind ein junges, motiviertes Team von Studenten des Karlsruher Instituts für Technologie. Seit 2009 führen wir erfolgreich Projekte in verschiedenen Branchen durch. Wir zeichnen uns durch unsere Flexibilität und Innovationsgeist aus und dadurch, dass wir verschiedene Studiengänge besuchen, bringen wir frisches Wissen aus den Bereichen Informatik, Maschinenbau, Elektrotechnik und mehr in jedes Projekt. Mit über 10 Jahren Erfahrung in der Softwareentwicklung, Digitalisierung, Entwicklungsideen, Prozessoptimierung und Konstruktion sind wir der ideale Partner für Ihre Herausforderungen."
 
-  let stepList: { [key: string]: StepProps }  = {
+  const stepList: { [key: string]: StepProps }  = {
     welcome:{
       title: "Begrüßung",
       text: `Hallo, ich heiße ${info.me} und ich rufe im Auftrag von Studentec, dem Studentischen Ingineursbüro in Karlsruhe, an. Spreche ich mit ${info.contactName}?`,
