@@ -22,8 +22,9 @@ import {
 const pb = new PocketBase("https://db.its.klzdev.com");
 
 export default function edit() {
-	const isEdit = localStorage.getItem("edit");
 	const [steps, setSteps] = useState<StepType[]>([]);
+  const [isEdit, setIsEdit] = useState(false);
+
 	const [activeStepId, setActiveStepId] = useState<string>("");
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [editButton, setEditButton] = useState<LinkType>();
@@ -130,6 +131,7 @@ export default function edit() {
 	useEffect(() => {
 		getSteps();
 		getButtons();
+    setIsEdit(localStorage.getItem("edit") === "true");
 	}, []);
 	const getButtons = async () => {
 		pb.collection("step_links")
