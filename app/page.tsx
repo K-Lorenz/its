@@ -15,67 +15,6 @@ export default function Home() {
 	});
 	const [steps, setSteps] = useState<StepType[]>([]);
 	const [displayedSteps, setDisplayedSteps] = useState<StepType[]>([]);
-	const pb = new PocketBase("https://db.its.klzdev.com");
-	const getSteps = async () => {
-		pb.collection("step_links")
-  .getFullList({
-    expand: "start_step",
-  })
-  .then((links) => {
-    links.forEach(async(link) => {
-      const start_step = link.expand?.start_step;
-      const text = start_step.text;
-			start_step.text = await serialize(start_step.text);
-      if (start_step) {
-        setSteps((prevSteps) => {
-          // Check if this step already exists
-          const existingStep = prevSteps.find((s) => s.id === start_step.id);
-
-          if (existingStep) {
-            // Update linksto if the step already exists
-            return prevSteps.map((step) =>
-              step.id === start_step.id
-                ? {
-                    ...step,
-                    linksto: [
-                      ...step.linksto!,
-                      {
-                        id: link.id,
-						destinationStepId: link.destination_step, // Assuming this is available
-                        buttonType: link.button_type,
-                        buttonText: link.button_text,
-                      },
-                    ],
-                  }
-                : step
-            );
-          } else {
-            // Add new step with initial link
-            return [
-              ...prevSteps,
-              {
-                id: start_step.id,
-                rawText: text,
-                title: start_step.title,
-                text: start_step.text,
-                linksto: [
-                  {
-                    id: link.id,
-					destinationStepId: link.destination_step, // Assuming this is available
-                    buttonType: link.button_type,
-                    buttonText: link.button_text,
-                  },
-                ],
-                active: true,
-              },
-            ];
-          }
-        });
-      }
-    });
-  });
-
-	};
 	const stepContainerRef = useRef<HTMLDivElement>(null);
 	useEffect(() => {
 		if (displayedSteps.length > 0 && stepContainerRef.current) {
@@ -87,9 +26,67 @@ export default function Home() {
 				});
 			}
 		}
-	}, [steps]);
+	}, [displayedSteps.length, steps]);
 	useEffect(() => {
-		getSteps();
+    const pb = new PocketBase("https://db.its.klzdev.com");
+    pb.collection("step_links")
+    .getFullList({
+      expand: "start_step",
+    })
+    .then((links) => {
+      links.forEach(async(link) => {
+        const start_step = link.expand?.start_step;
+        const text = start_step.text;
+        start_step.text = await serialize(start_step.text);
+        if (start_step) {
+          setSteps((prevSteps) => {
+            // Check if this step already exists
+            const existingStep = prevSteps.find((s) => s.id === start_step.id);
+  
+            if (existingStep) {
+              // Update linksto if the step already exists
+              return prevSteps.map((step) =>
+                step.id === start_step.id
+                  ? {
+                      ...step,
+                      linksto: [
+                        ...step.linksto!,
+                        {
+                          id: link.id,
+              destinationStepId: link.destination_step, // Assuming this is available
+                          buttonType: link.button_type,
+                          buttonText: link.button_text,
+                        },
+                      ],
+                    }
+                  : step
+              );
+            } else {
+              // Add new step with initial link
+              return [
+                ...prevSteps,
+                {
+                  id: start_step.id,
+                  rawText: text,
+                  title: start_step.title,
+                  text: start_step.text,
+                  linksto: [
+                    {
+                      id: link.id,
+            destinationStepId: link.destination_step, // Assuming this is available
+                      buttonType: link.button_type,
+                      buttonText: link.button_text,
+                    },
+                  ],
+                  active: true,
+                },
+              ];
+            }
+          });
+        }
+      });
+    });
+  
 	}, []);
 	function addStep(step: string) {
     if(step === "reset"){
