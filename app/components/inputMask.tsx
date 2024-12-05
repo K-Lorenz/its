@@ -35,7 +35,7 @@ export default function InputMask({ info, setInfo, onSave }: InputMaskProps) {
     if (localStorage.getItem("edit") === "true") {
       router.push("/edit");
     } else {
-      let pw = prompt("Bitte passwort eingeben");
+      const pw = prompt("Bitte passwort eingeben");
       if (pw === "studitekk") {
         localStorage.setItem("edit", "true");
         router.push("/edit");

@@ -1,4 +1,4 @@
-import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
+import { MDXRemote } from "next-mdx-remote";
 import { StepType } from "../types/types";
 interface StepProps {
   step: StepType;
@@ -13,7 +13,7 @@ export default function Step({step, active, buttonClicked}: StepProps) {
       <h2 className="text-2xl text-gray-700 mb-2">{step.title}</h2>
       <div className="text-gray-600 mb-7 ml-2 md:text-lg leading-loose ">
         <b>Dein Text: </b>
-        <MDXRemote {...step.text}/>
+        {step.text && <MDXRemote {...step.text} />}
       </div>
       <h2 className="text-xl text-gray-700 mb-4">Antwort</h2>
       <div className="flex md:justify-start justify-between space-x-5">

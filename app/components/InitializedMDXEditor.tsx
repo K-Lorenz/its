@@ -10,7 +10,6 @@ import {
   type MDXEditorMethods,
   type MDXEditorProps,
   toolbarPlugin,
-  UndoRedo,
   BoldItalicUnderlineToggles
 } from '@mdxeditor/editor'
 import '@mdxeditor/editor/style.css'

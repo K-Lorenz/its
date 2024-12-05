@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
 import PocketBase from "pocketbase";
@@ -6,7 +7,7 @@ import { ButtonType, LinkType, StepType } from "../types/types";
 import { ForwardRefEditor } from "../components/ForwardRefEditor";
 import { MDXRemote } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
-import { filter, MDXEditor, MDXEditorMethods } from "@mdxeditor/editor";
+import { MDXEditorMethods } from "@mdxeditor/editor";
 import React from "react";
 import { randomBytes } from "crypto";
 import { useRouter } from "next/navigation";
@@ -21,7 +22,7 @@ import {
 const pb = new PocketBase("https://db.its.klzdev.com");
 
 export default function edit() {
-	let isEdit = localStorage.getItem("edit");
+	const isEdit = localStorage.getItem("edit");
 	const [steps, setSteps] = useState<StepType[]>([]);
 	const [activeStepId, setActiveStepId] = useState<string>("");
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -36,8 +37,8 @@ export default function edit() {
 			})
 			.then((links) => {
 				links.forEach(async (link) => {
-					let start_step = link.expand?.start_step;
-					var text = start_step.text;
+					const start_step = link.expand?.start_step;
+					const text = start_step.text;
 					start_step.text = await serialize(start_step.text);
 					if (start_step) {
 						setSteps((prevSteps) => {
@@ -149,12 +150,12 @@ export default function edit() {
 	};
 	const buttonClicked = (buttonId: string) => {
     setEditButton(buttons.find((button) => button.id === buttonId));
-    setSelectedStep(buttons.find((button) => button.id === buttonId)?.destinationStepId!);
-    setSelectedOption(buttons.find((button) => button.id === buttonId)?.buttonType!);
+	setSelectedStep(buttons.find((button) => button.id === buttonId)?.destinationStepId || "");
+	setSelectedOption(buttons.find((button) => button.id === buttonId)?.buttonType || "");
 		setDialogOpen(true);
 	};
 	const addButton = () => {
-    let newID = "_" + randomBytes(16).toString("hex");
+    const newID = "_" + randomBytes(16).toString("hex");
 		setSteps((prevSteps) => {
 			return prevSteps.map((step) =>
 				step.id === activeStepId
@@ -242,7 +243,6 @@ export default function edit() {
 						title: step.title,
 						text: step.rawText,
 					})
-					.then((res) => {});
 			} else {
 				pb.collection("steps")
 					.update(step.id, {
@@ -262,7 +262,6 @@ export default function edit() {
 							destination_step: link.destinationStepId,
 							start_step: step.id,
 						})
-						.then((res) => {});
 				} else {
 					pb.collection("step_links")
 						.update(link.id, {
@@ -270,7 +269,6 @@ export default function edit() {
 							button_type: link.buttonType,
 							destination_step: link.destinationStepId,
 						})
-						.then((res) => {});
 				}
 			});
       console.log(step)
@@ -288,10 +286,10 @@ export default function edit() {
 									(existingLink) => existingLink.id !== editButton?.id
 								),
 								{
-									id: editButton?.id!,
-									destinationStepId: editButton?.destinationStepId!,
-									buttonType: editButton?.buttonType!,
-									buttonText: editButton?.buttonText!,
+									id: editButton ? editButton.id : "",
+									destinationStepId: editButton?.destinationStepId ? editButton?.destinationStepId : "",
+									buttonType: editButton?.buttonType ? editButton?.buttonType : "Neutral",
+									buttonText: editButton?.buttonText ? editButton?.buttonText : "Neuer Knopf",
 								},
 							],
 					  }
@@ -562,7 +560,9 @@ export default function edit() {
                       : step
                   );
                 });
-                deleteButton(editButton?.id!)
+				if (editButton?.id) {
+				  deleteButton(editButton.id);
+				}
                 setDialogOpen(false)
               }} className="bg-red-800 font-bold text-3xl rounded-md text-white px-2 py-4">Knopf löschen</button>
 						</div>

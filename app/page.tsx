@@ -23,7 +23,7 @@ export default function Home() {
   })
   .then((links) => {
     links.forEach(async(link) => {
-      let start_step = link.expand?.start_step;
+      const start_step = link.expand?.start_step;
       const text = start_step.text;
 			start_step.text = await serialize(start_step.text);
       if (start_step) {
@@ -96,7 +96,7 @@ export default function Home() {
       setDisplayedSteps([])
       return
     }
-		let newStep = steps.find((s) => s.id === step);
+		const newStep = steps.find((s) => s.id === step);
 		setDisplayedSteps((prevSteps) => {
 			return [
 				...prevSteps.map((step) => ({
