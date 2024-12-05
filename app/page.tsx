@@ -105,7 +105,12 @@ export default function Home() {
 		});
 	}
 	function onSave() {
-		addStep(steps[0].id!);
+    steps.forEach(async(step) => {
+      step.text = await serialize(step.rawText.replace("((me))", info.me).replace("((contactName))", info.contactName).replace("((contactTime))", info.contactTime));
+    if (step.id === steps[0].id) {
+      addStep(step.id);
+    }
+    })
 	}
 	return (
 		<div className="bg-gray-200 min-h-screen w-full flex flex-col items-center space-y-5">

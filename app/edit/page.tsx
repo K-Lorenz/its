@@ -324,6 +324,7 @@ export default function edit() {
 		<>
 			<div className="bg-gray-200 min-h-fit w-full h-screen flex flex-col space-y-5 text-black">
 				<h1 className="text-3xl text-center mt-2 ">Einträge bearbeiten</h1>
+        <h2>Custom Elemente: ((me))= Eigener Name; ((contactName))= Name des Kontaktes; ((contactTime))= Zeitpunkt des Kontaktes</h2>
 				<button
 					onClick={() => close()}
 					className="fixed rounded-md -top-2 left-3 text-white font-semibold bg-red-600 px-4 py-2 "
