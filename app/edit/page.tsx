@@ -23,7 +23,7 @@ const pb = new PocketBase("https://db.its.klzdev.com");
 
 export default function edit() {
 	const [steps, setSteps] = useState<StepType[]>([]);
-  const [isEdit, setIsEdit] = useState(false);
+	const [isEdit, setIsEdit] = useState(false);
 
 	const [activeStepId, setActiveStepId] = useState<string>("");
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -44,7 +44,9 @@ export default function edit() {
 					if (start_step) {
 						setSteps((prevSteps) => {
 							// Check if this step already exists
-							const existingStep = prevSteps.find((s) => s.id === start_step.id);
+							const existingStep = prevSteps.find(
+								(s) => s.id === start_step.id
+							);
 
 							if (existingStep) {
 								// Update linksto if the step already exists
@@ -131,7 +133,7 @@ export default function edit() {
 	useEffect(() => {
 		getSteps();
 		getButtons();
-    setIsEdit(localStorage.getItem("edit") === "true");
+		setIsEdit(localStorage.getItem("edit") === "true");
 	}, []);
 	const getButtons = async () => {
 		pb.collection("step_links")
@@ -151,13 +153,17 @@ export default function edit() {
 			});
 	};
 	const buttonClicked = (buttonId: string) => {
-    setEditButton(buttons.find((button) => button.id === buttonId));
-	setSelectedStep(buttons.find((button) => button.id === buttonId)?.destinationStepId || "");
-	setSelectedOption(buttons.find((button) => button.id === buttonId)?.buttonType || "");
+		setEditButton(buttons.find((button) => button.id === buttonId));
+		setSelectedStep(
+			buttons.find((button) => button.id === buttonId)?.destinationStepId || ""
+		);
+		setSelectedOption(
+			buttons.find((button) => button.id === buttonId)?.buttonType || ""
+		);
 		setDialogOpen(true);
 	};
 	const addButton = () => {
-    const newID = "_" + randomBytes(16).toString("hex");
+		const newID = "_" + randomBytes(16).toString("hex");
 		setSteps((prevSteps) => {
 			return prevSteps.map((step) =>
 				step.id === activeStepId
@@ -176,17 +182,17 @@ export default function edit() {
 					: step
 			);
 		});
-    setButtons((prevButtons) => {
-      return [
-        ...prevButtons,
-        {
-          id: newID,
-          destinationStepId: "",
-          buttonType: "Neutral",
-          buttonText: "Neuer Knopf",
-        },
-      ];
-    })
+		setButtons((prevButtons) => {
+			return [
+				...prevButtons,
+				{
+					id: newID,
+					destinationStepId: "",
+					buttonType: "Neutral",
+					buttonText: "Neuer Knopf",
+				},
+			];
+		});
 	};
 	const addStep = () => {
 		setSteps((prevSteps) => {
@@ -240,11 +246,10 @@ export default function edit() {
 	const close = () => {
 		steps.map((step) => {
 			if (step.id.startsWith("_")) {
-				pb.collection("steps")
-					.create({
-						title: step.title,
-						text: step.rawText,
-					})
+				pb.collection("steps").create({
+					title: step.title,
+					text: step.rawText,
+				});
 			} else {
 				pb.collection("steps")
 					.update(step.id, {
@@ -257,23 +262,21 @@ export default function edit() {
 			}
 			step.linksto?.map((link) => {
 				if (link.id.startsWith("_")) {
-					pb.collection("step_links")
-						.create({
-							button_text: link.buttonText,
-							button_type: link.buttonType,
-							destination_step: link.destinationStepId,
-							start_step: step.id,
-						})
+					pb.collection("step_links").create({
+						button_text: link.buttonText,
+						button_type: link.buttonType,
+						destination_step: link.destinationStepId,
+						start_step: step.id,
+					});
 				} else {
-					pb.collection("step_links")
-						.update(link.id, {
-							button_text: link.buttonText,
-							button_type: link.buttonType,
-							destination_step: link.destinationStepId,
-						})
+					pb.collection("step_links").update(link.id, {
+						button_text: link.buttonText,
+						button_type: link.buttonType,
+						destination_step: link.destinationStepId,
+					});
 				}
 			});
-      console.log(step)
+			console.log(step);
 		});
 		router.push("/");
 	};
@@ -289,9 +292,15 @@ export default function edit() {
 								),
 								{
 									id: editButton ? editButton.id : "",
-									destinationStepId: editButton?.destinationStepId ? editButton?.destinationStepId : "",
-									buttonType: editButton?.buttonType ? editButton?.buttonType : "Neutral",
-									buttonText: editButton?.buttonText ? editButton?.buttonText : "Neuer Knopf",
+									destinationStepId: editButton?.destinationStepId
+										? editButton?.destinationStepId
+										: "",
+									buttonType: editButton?.buttonType
+										? editButton?.buttonType
+										: "Neutral",
+									buttonText: editButton?.buttonText
+										? editButton?.buttonText
+										: "Neuer Knopf",
 								},
 							],
 					  }
@@ -305,26 +314,29 @@ export default function edit() {
 			...editButton!,
 			buttonText: e.target.value,
 		});
-    setButtons((prevButtons) => {
-      return prevButtons.map((button) =>
-        button.id === editButton?.id
-          ? {
-              ...button,
-              buttonText: e.target.value,
-            }
-          : button
-      );
-    })
+		setButtons((prevButtons) => {
+			return prevButtons.map((button) =>
+				button.id === editButton?.id
+					? {
+							...button,
+							buttonText: e.target.value,
+					  }
+					: button
+			);
+		});
 	};
-  const deleteButton = async(id: string) => {
-    pb.collection("step_links").delete(id)
-  }
+	const deleteButton = async (id: string) => {
+		pb.collection("step_links").delete(id);
+	};
 
 	return isEdit ? (
 		<>
 			<div className="bg-gray-200 min-h-fit w-full h-screen flex flex-col space-y-5 text-black">
 				<h1 className="text-3xl text-center mt-2 ">Einträge bearbeiten</h1>
-        <h2>Custom Elemente: ((me))= Eigener Name; ((contactName))= Name des Kontaktes; ((contactTime))= Zeitpunkt des Kontaktes</h2>
+				<h2>
+					Custom Elemente: ((me))= Eigener Name; ((contactName))= Name des
+					Kontaktes; ((contactTime))= Zeitpunkt des Kontaktes
+				</h2>
 				<button
 					onClick={() => close()}
 					className="fixed rounded-md -top-2 left-3 text-white font-semibold bg-red-600 px-4 py-2 "
@@ -376,7 +388,9 @@ export default function edit() {
 						<label className="text-gray-600 block">Titel</label>
 						<input
 							type="text"
-							value={steps.find((step) => activeStepId === step.id)?.title || ""}
+							value={
+								steps.find((step) => activeStepId === step.id)?.title || ""
+							}
 							onChange={(e) => handleTitleChange(e.target.value)}
 							className="w-full p-3 rounded-md bg-white text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
 							required
@@ -463,8 +477,8 @@ export default function edit() {
 						<Description>
 							Hier kannst du den Zielort, den Text und die Farbe verändern.
 						</Description>
-						<div className="flex flex-col space-y-4">
-							<label>Knopf-Text</label>
+						<div className="flex flex-col">
+							<label className="mt-2">Knopf-Text</label>
 							<input
 								type="text"
 								value={editButton?.buttonText || ""}
@@ -472,25 +486,32 @@ export default function edit() {
 								className="w-full p-3 rounded-md bg-white text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
 								required
 							/>
-							<label>Zielort</label>
-							<div className="flex flex-col space-y-2 p-2 bg-gray-100">
-              <button onClick={()=>{
-                setEditButton({
-                  ...editButton!,
-                  destinationStepId: ""
-                })
-                setButtons((prevButtons) => {
-                  return prevButtons.map((button) =>
-                    button.id === editButton?.id
-                      ? {
-                          ...button,
-                          destinationStepId: "",
-                        }
-                      : button
-                  );
-                })
-                setSelectedStep("")
-              }} className={`p-4 rounded-lg font-bold text-white bg-gray-500 ${selectedStep === ""? "ring-4 ring-offset-2" : ""}`}>Neustarten</button>
+							<label className="mt-2" >Zielort</label>
+							<div className="flex flex-col max-h-56 overflow-scroll space-y-2 p-2 bg-gray-100">
+								<button
+									onClick={() => {
+										setEditButton({
+											...editButton!,
+											destinationStepId: "",
+										});
+										setButtons((prevButtons) => {
+											return prevButtons.map((button) =>
+												button.id === editButton?.id
+													? {
+															...button,
+															destinationStepId: "",
+													  }
+													: button
+											);
+										});
+										setSelectedStep("");
+									}}
+									className={`p-4 rounded-lg h-2/5 font-bold text-white bg-gray-500 ${
+										selectedStep === "" ? "ring-4 ring-offset-2" : ""
+									}`}
+								>
+									Neustarten
+								</button>
 								{steps.map((step) => (
 									<button
 										key={step.id}
@@ -502,16 +523,16 @@ export default function edit() {
 												...editButton!,
 												destinationStepId: step.id,
 											});
-                      setButtons((prevButtons) => {
-                        return prevButtons.map((button) =>
-                          button.id === editButton?.id
-                            ? {
-                                ...button,
-                                destinationStepId: step.id,
-                              }
-                            : button
-                        );
-                      })
+											setButtons((prevButtons) => {
+												return prevButtons.map((button) =>
+													button.id === editButton?.id
+														? {
+																...button,
+																destinationStepId: step.id,
+														  }
+														: button
+												);
+											});
 											setSelectedStep(step.id);
 										}}
 									>
@@ -519,7 +540,7 @@ export default function edit() {
 									</button>
 								))}
 							</div>
-							<label>Farbe</label>
+							<label className="mt-2" >Farbe</label>
 							<div className="flex space-x-4 p-4 justify-between">
 								{options.map((option) => (
 									<button
@@ -529,16 +550,16 @@ export default function edit() {
 												...editButton!,
 												buttonType: option.id,
 											});
-                      setButtons((prevButtons) => {
-                        return prevButtons.map((button) =>
-                          button.id === editButton?.id
-                            ? {
-                                ...button,
-                                buttonType: option.id,
-                              }
-                            : button
-                        );
-                      })
+											setButtons((prevButtons) => {
+												return prevButtons.map((button) =>
+													button.id === editButton?.id
+														? {
+																...button,
+																buttonType: option.id,
+														  }
+														: button
+												);
+											});
 											setSelectedOption(option.id);
 										}}
 										className={`p-4 rounded-lg font-bold text-white ${
@@ -549,25 +570,34 @@ export default function edit() {
 									</button>
 								))}
 							</div>
-              <button onClick={()=>{
-                setButtons((prevButtons) => {
-                  return prevButtons.filter((button) => button.id !== editButton?.id);
-                })
-                setSteps((prevSteps) => {
-                  return prevSteps.map((step) =>
-                    step.id === activeStepId
-                      ? {
-                          ...step,
-                          linksto: step.linksto?.filter((link) => link.id !== editButton?.id)
-                        }
-                      : step
-                  );
-                });
-				if (editButton?.id) {
-				  deleteButton(editButton.id);
-				}
-                setDialogOpen(false)
-              }} className="bg-red-800 font-bold text-3xl rounded-md text-white px-2 py-4">Knopf löschen</button>
+							<button
+								onClick={() => {
+									setButtons((prevButtons) => {
+										return prevButtons.filter(
+											(button) => button.id !== editButton?.id
+										);
+									});
+									setSteps((prevSteps) => {
+										return prevSteps.map((step) =>
+											step.id === activeStepId
+												? {
+														...step,
+														linksto: step.linksto?.filter(
+															(link) => link.id !== editButton?.id
+														),
+												  }
+												: step
+										);
+									});
+									if (editButton?.id) {
+										deleteButton(editButton.id);
+									}
+									setDialogOpen(false);
+								}}
+								className="bg-red-800 font-bold text-3xl rounded-md text-white px-2 py-4"
+							>
+								Knopf löschen
+							</button>
 						</div>
 					</DialogPanel>
 				</div>
