@@ -96,17 +96,17 @@ Here’s how the various parts of the application work together:
 This project uses GitHub for collaboration and issue tracking. Follow these steps to ensure a smooth workflow:
 
 - **Issues**:  
-  - Feature requests: Create or review issues with the `feature-request` tag.  
+  - Feature requests: Create or review issues with the `enhancement` tag.  
   - Bug reports: Create or review issues with the `bug` tag.  
 
 - **Tags**:  
-  - Always tag issues appropriately (e.g., `feature-request`, `bug`, `priority`, etc.).  
+  - Always tag issues appropriately (e.g., `enhancement`, `bug`, `priority`, etc.).  
   - Add your issue to the **GitHub Project Board** to track its progress.
 
 ## 2. **Steps to Work on a Feature or Bug**
 1. **Create an Issue**:  
    - Go to the **Issues** tab on GitHub and click "New Issue".  
-   - Fill out the details of the issue and select the appropriate tags (e.g., `feature-request` or `bug`).  
+   - Fill out the details of the issue and select the appropriate tags (e.g., `enhancement` or `bug`).  
    - Add the issue to the GitHub Project Board for tracking.
 2. **Creating a feature-Branch**
    - For fixing the bug or adding a new feature create a new Branch
