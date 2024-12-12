@@ -90,3 +90,29 @@ Here’s how the various parts of the application work together:
 2. **Layouts**: The `layout.tsx` file ensures consistent structure across pages.  
 3. **Components**: Reusable elements from `components/` are imported and used in pages or layouts.  
 4. **Modular Pages**: Each page is its own isolated module, making development and debugging straightforward.
+# Working on the Project
+
+## 1. **GitHub Workflow**
+This project uses GitHub for collaboration and issue tracking. Follow these steps to ensure a smooth workflow:
+
+- **Issues**:  
+  - Feature requests: Create or review issues with the `feature-request` tag.  
+  - Bug reports: Create or review issues with the `bug` tag.  
+
+- **Tags**:  
+  - Always tag issues appropriately (e.g., `feature-request`, `bug`, `priority`, etc.).  
+  - Add your issue to the **GitHub Project Board** to track its progress.
+
+## 2. **Steps to Work on a Feature or Bug**
+1. **Create an Issue**:  
+   - Go to the **Issues** tab on GitHub and click "New Issue".  
+   - Fill out the details of the issue and select the appropriate tags (e.g., `feature-request` or `bug`).  
+   - Add the issue to the GitHub Project Board for tracking.
+2. **Creating a feature-Branch**
+   - For fixing the bug or adding a new feature create a new Branch
+   - Name it so everybody can quickly understand what you are doing
+   - Ideally you create the new Branch in the issue (Create a new Branch)
+3. **Pull Request**
+   - After completing the work create a new pull request into main.
+   - The pullrequest should have a small description of what you did.
+   - Wait for the project-maintainer to merge the pullrequest
